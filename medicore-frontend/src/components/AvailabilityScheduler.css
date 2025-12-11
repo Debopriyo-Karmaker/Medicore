@@ -1,0 +1,219 @@
+.availability-scheduler {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.scheduler-add-day {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.scheduler-add-day select {
+  flex: 1;
+  padding: 14px 18px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  background: #f8f9fa;
+  transition: all 0.3s;
+}
+
+.scheduler-add-day select:focus {
+  outline: none;
+  border-color: #1e3c72;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+}
+
+.btn-add-day {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.3s;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-add-day:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.schedule-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.day-card {
+  background: linear-gradient(135deg, #f8f9ff, #ffffff);
+  padding: 25px;
+  border-radius: 14px;
+  border: 2px solid #e9ecef;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s;
+}
+
+.day-card:hover {
+  border-color: #1e3c72;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.day-header h3 {
+  margin: 0;
+  color: #1e3c72;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.btn-remove-day {
+  background: #dc3545;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.btn-remove-day:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+.time-slot-input {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.time-slot-input input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.3s;
+}
+
+.time-slot-input input:focus {
+  outline: none;
+  border-color: #1e3c72;
+  box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+}
+
+.btn-add-slot {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+}
+
+.btn-add-slot:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.time-slots-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.no-slots {
+  color: #6c757d;
+  font-size: 14px;
+  font-style: italic;
+  margin: 0;
+}
+
+.time-slot-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(30, 60, 114, 0.3);
+}
+
+.time-slot-chip button {
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.time-slot-chip button:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.btn-save-schedule {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4);
+}
+
+.btn-save-schedule:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(30, 60, 114, 0.5);
+}
+
+@media (max-width: 768px) {
+  .schedule-days {
+    grid-template-columns: 1fr;
+  }
+
+  .time-slot-input {
+    flex-direction: column;
+  }
+}

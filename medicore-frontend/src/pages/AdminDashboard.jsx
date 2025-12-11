@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import './AdminDashboard.css';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -14,6 +15,7 @@ export default function AdminDashboard() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchAllData();
@@ -50,126 +52,173 @@ export default function AdminDashboard() {
   };
 
   if (loading) {
-    return <div className="loading">Loading admin dashboard...</div>;
+    return (
+      <div className="admin-loading">
+        <div className="spinner-large"></div>
+        <p>Loading Dashboard...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="admin-dashboard">
-      <div className="admin-header">
-        <h1>Admin Dashboard</h1>
-        <p>Welcome, {user?.full_name}</p>
+    <div className="admin-dashboard-modern">
+      {/* Header */}
+      <div className="admin-header-modern">
+        <div className="admin-welcome">
+          <h1>Admin Dashboard</h1>
+          <p>Welcome back, <strong>{user?.full_name}</strong></p>
+        </div>
+        <div className="admin-actions">
+          <button className="refresh-btn" onClick={fetchAllData}>
+            🔄 Refresh
+          </button>
+        </div>
       </div>
 
-      {error && <div className="alert alert-error">{error}</div>}
+      {error && (
+        <div className="alert-modern alert-error-modern">
+          ⚠️ {error}
+        </div>
+      )}
 
-      <div className="admin-tabs">
+      {/* Statistics Cards */}
+      {activeTab === 'statistics' && data.statistics && (
+        <div className="stats-grid-modern">
+          <div className="stat-card-modern stat-primary">
+            <div className="stat-icon">👥</div>
+            <div className="stat-content">
+              <h3>{data.statistics.total_users}</h3>
+              <p>Total Users</p>
+            </div>
+          </div>
+          <div className="stat-card-modern stat-success">
+            <div className="stat-icon">🏥</div>
+            <div className="stat-content">
+              <h3>{data.statistics.total_patients}</h3>
+              <p>Patients</p>
+            </div>
+          </div>
+          <div className="stat-card-modern stat-info">
+            <div className="stat-icon">👨‍⚕️</div>
+            <div className="stat-content">
+              <h3>{data.statistics.total_doctors}</h3>
+              <p>Doctors</p>
+            </div>
+          </div>
+          <div className="stat-card-modern stat-warning">
+            <div className="stat-icon">📅</div>
+            <div className="stat-content">
+              <h3>{data.statistics.total_appointments}</h3>
+              <p>Appointments</p>
+            </div>
+          </div>
+          <div className="stat-card-modern stat-pending">
+            <div className="stat-icon">⏳</div>
+            <div className="stat-content">
+              <h3>{data.statistics.appointments_by_status.pending}</h3>
+              <p>Pending</p>
+            </div>
+          </div>
+          <div className="stat-card-modern stat-confirmed">
+            <div className="stat-icon">✅</div>
+            <div className="stat-content">
+              <h3>{data.statistics.appointments_by_status.confirmed}</h3>
+              <p>Confirmed</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation Tabs */}
+      <div className="tabs-modern">
         <button
-          className={`tab-btn ${activeTab === 'statistics' ? 'active' : ''}`}
+          className={`tab-modern ${activeTab === 'statistics' ? 'active' : ''}`}
           onClick={() => setActiveTab('statistics')}
         >
-          📊 Statistics
+          📊 Overview
         </button>
         <button
-          className={`tab-btn ${activeTab === 'users' ? 'active' : ''}`}
+          className={`tab-modern ${activeTab === 'users' ? 'active' : ''}`}
           onClick={() => setActiveTab('users')}
         >
           👥 Users ({data.users.length})
         </button>
         <button
-          className={`tab-btn ${activeTab === 'patients' ? 'active' : ''}`}
+          className={`tab-modern ${activeTab === 'patients' ? 'active' : ''}`}
           onClick={() => setActiveTab('patients')}
         >
           🏥 Patients ({data.patients.length})
         </button>
         <button
-          className={`tab-btn ${activeTab === 'doctors' ? 'active' : ''}`}
+          className={`tab-modern ${activeTab === 'doctors' ? 'active' : ''}`}
           onClick={() => setActiveTab('doctors')}
         >
           👨‍⚕️ Doctors ({data.doctors.length})
         </button>
         <button
-          className={`tab-btn ${activeTab === 'appointments' ? 'active' : ''}`}
+          className={`tab-modern ${activeTab === 'appointments' ? 'active' : ''}`}
           onClick={() => setActiveTab('appointments')}
         >
           📅 Appointments ({data.appointments.length})
         </button>
       </div>
 
-      <div className="tab-content">
-        {activeTab === 'statistics' && <StatisticsTab data={data.statistics} />}
-        {activeTab === 'users' && <UsersTab users={data.users} />}
-        {activeTab === 'patients' && <PatientsTab patients={data.patients} />}
-        {activeTab === 'doctors' && <DoctorsTab doctors={data.doctors} />}
-        {activeTab === 'appointments' && <AppointmentsTab appointments={data.appointments} />}
-      </div>
-    </div>
-  );
-}
+      {/* Search Bar */}
+      {activeTab !== 'statistics' && (
+        <div className="search-bar-modern">
+          <input
+            type="text"
+            placeholder={`Search ${activeTab}...`}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <span className="search-icon">🔍</span>
+        </div>
+      )}
 
-// Statistics Component
-function StatisticsTab({ data }) {
-  if (!data) return <div>Loading statistics...</div>;
-
-  return (
-    <div className="statistics-grid">
-      <div className="stat-card">
-        <div className="stat-label">Total Users</div>
-        <div className="stat-number">{data.total_users}</div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-label">Total Patients</div>
-        <div className="stat-number">{data.total_patients}</div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-label">Total Doctors</div>
-        <div className="stat-number">{data.total_doctors}</div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-label">Total Appointments</div>
-        <div className="stat-number">{data.total_appointments}</div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-label">Pending Appointments</div>
-        <div className="stat-number" style={{ color: '#f39c12' }}>
-          {data.appointments_by_status.pending}
-        </div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-label">Confirmed Appointments</div>
-        <div className="stat-number" style={{ color: '#27ae60' }}>
-          {data.appointments_by_status.confirmed}
-        </div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-label">Rejected Appointments</div>
-        <div className="stat-number" style={{ color: '#e74c3c' }}>
-          {data.appointments_by_status.rejected}
-        </div>
+      {/* Tab Content */}
+      <div className="tab-content-modern">
+        {activeTab === 'users' && <UsersTab users={data.users} searchTerm={searchTerm} />}
+        {activeTab === 'patients' && <PatientsTab patients={data.patients} searchTerm={searchTerm} />}
+        {activeTab === 'doctors' && <DoctorsTab doctors={data.doctors} searchTerm={searchTerm} />}
+        {activeTab === 'appointments' && <AppointmentsTab appointments={data.appointments} searchTerm={searchTerm} />}
       </div>
     </div>
   );
 }
 
 // Users Component
-function UsersTab({ users }) {
+function UsersTab({ users, searchTerm }) {
+  const filtered = users.filter(u => 
+    u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="data-table">
-      <table>
+    <div className="table-container-modern">
+      <table className="table-modern">
         <thead>
           <tr>
-            <th>Email</th>
             <th>Full Name</th>
+            <th>Email</th>
             <th>Role</th>
             <th>Joined</th>
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
+          {filtered.map(user => (
             <tr key={user.id}>
-              <td>{user.email}</td>
-              <td>{user.full_name}</td>
               <td>
-                <span className={`role-badge role-${user.role}`}>{user.role}</span>
+                <div className="user-cell">
+                  <div className="avatar">{user.full_name.charAt(0)}</div>
+                  <span>{user.full_name}</span>
+                </div>
+              </td>
+              <td>{user.email}</td>
+              <td>
+                <span className={`badge-modern badge-${user.role}`}>
+                  {user.role}
+                </span>
               </td>
               <td>{new Date(user.created_at).toLocaleDateString()}</td>
             </tr>
@@ -181,31 +230,34 @@ function UsersTab({ users }) {
 }
 
 // Patients Component
-function PatientsTab({ patients }) {
+function PatientsTab({ patients, searchTerm }) {
+  const filtered = patients.filter(p => 
+    p.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.patient_id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="data-table">
-      <table>
+    <div className="table-container-modern">
+      <table className="table-modern">
         <thead>
           <tr>
             <th>Patient ID</th>
             <th>Name</th>
-            <th>Email</th>
-            <th>DOB</th>
             <th>Gender</th>
             <th>Blood Group</th>
-            <th>Joined</th>
+            <th>Contact</th>
           </tr>
         </thead>
         <tbody>
-          {patients.map(patient => (
+          {filtered.map(patient => (
             <tr key={patient.id}>
-              <td>{patient.patient_id}</td>
+              <td><strong>{patient.patient_id}</strong></td>
               <td>{patient.user_name}</td>
-              <td>{patient.user_email}</td>
-              <td>{patient.date_of_birth || 'N/A'}</td>
               <td>{patient.gender}</td>
-              <td>{patient.blood_group}</td>
-              <td>{new Date(patient.created_at).toLocaleDateString()}</td>
+              <td>
+                <span className="blood-badge">{patient.blood_group || 'N/A'}</span>
+              </td>
+              <td>{patient.user_email}</td>
             </tr>
           ))}
         </tbody>
@@ -215,29 +267,37 @@ function PatientsTab({ patients }) {
 }
 
 // Doctors Component
-function DoctorsTab({ doctors }) {
+function DoctorsTab({ doctors, searchTerm }) {
+  const filtered = doctors.filter(d => 
+    d.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    d.specialization.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="data-table">
-      <table>
+    <div className="table-container-modern">
+      <table className="table-modern">
         <thead>
           <tr>
             <th>Name</th>
-            <th>Email</th>
-            <th>Hospital Email</th>
             <th>Specialization</th>
+            <th>Hospital Email</th>
             <th>Phone</th>
-            <th>Joined</th>
           </tr>
         </thead>
         <tbody>
-          {doctors.map(doctor => (
+          {filtered.map(doctor => (
             <tr key={doctor.id}>
-              <td>{doctor.full_name}</td>
-              <td>{doctor.email}</td>
+              <td>
+                <div className="user-cell">
+                  <div className="avatar doctor-avatar">{doctor.full_name.charAt(0)}</div>
+                  <span>{doctor.full_name}</span>
+                </div>
+              </td>
+              <td>
+                <span className="specialization-badge">{doctor.specialization}</span>
+              </td>
               <td>{doctor.hospital_email}</td>
-              <td>{doctor.specialization}</td>
               <td>{doctor.phone || 'N/A'}</td>
-              <td>{new Date(doctor.created_at).toLocaleDateString()}</td>
             </tr>
           ))}
         </tbody>
@@ -247,37 +307,36 @@ function DoctorsTab({ doctors }) {
 }
 
 // Appointments Component
-function AppointmentsTab({ appointments }) {
+function AppointmentsTab({ appointments, searchTerm }) {
+  const filtered = appointments.filter(a => 
+    a.patient_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    a.doctor_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="data-table">
-      <table>
+    <div className="table-container-modern">
+      <table className="table-modern">
         <thead>
           <tr>
             <th>Patient</th>
             <th>Doctor</th>
-            <th>Specialization</th>
             <th>Date & Time</th>
-            <th>Reason</th>
             <th>Status</th>
+            <th>Reason</th>
           </tr>
         </thead>
         <tbody>
-          {appointments.map(apt => (
+          {filtered.map(apt => (
             <tr key={apt.id}>
-              <td>
-                <div>{apt.patient_name}</div>
-                <small>{apt.patient_email}</small>
-              </td>
-              <td>
-                <div>{apt.doctor_name}</div>
-                <small>{apt.doctor_email}</small>
-              </td>
-              <td>{apt.doctor_specialization}</td>
+              <td>{apt.patient_name}</td>
+              <td>{apt.doctor_name}</td>
               <td>{new Date(apt.appointment_date).toLocaleString()}</td>
-              <td>{apt.reason}</td>
               <td>
-                <span className={`status-badge status-${apt.status}`}>{apt.status}</span>
+                <span className={`status-badge-modern status-${apt.status}`}>
+                  {apt.status}
+                </span>
               </td>
+              <td className="reason-cell">{apt.reason}</td>
             </tr>
           ))}
         </tbody>

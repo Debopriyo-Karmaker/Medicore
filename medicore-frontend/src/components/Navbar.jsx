@@ -1,17 +1,20 @@
 import { Navbar as BSNavbar, Nav, Container, Button, Dropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaUser, FaSignOutAlt, FaHome, FaCalendarAlt, FaUserCircle } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaHome, FaCalendarAlt, FaUserCircle, FaFileAlt, FaPills } from 'react-icons/fa';
 import { USER_ROLES } from '../utils/constants';
+
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
 
   return (
     <BSNavbar bg="primary" variant="dark" expand="lg" className="shadow-sm">
@@ -41,6 +44,12 @@ const Navbar = () => {
                     <Nav.Link as={Link} to="/patient/appointments" className="text-white">
                       <FaCalendarAlt className="me-1" /> Appointments
                     </Nav.Link>
+                    <Nav.Link as={Link} to="/patient/prescriptions" className="text-white">
+                      <FaPills className="me-1" /> Prescriptions
+                    </Nav.Link>
+                    <Nav.Link as={Link} to="/patient/reports" className="text-white">
+                      <FaFileAlt className="me-1" /> Reports
+                    </Nav.Link>
                   </>
                 )}
                 
@@ -51,12 +60,31 @@ const Navbar = () => {
                     </Nav.Link>
                   </>
                 )}
+
+
+                {user.role === USER_ROLES.LAB_ASSISTANT && (
+                  <>
+                    <Nav.Link as={Link} to="/lab/dashboard" className="text-white">
+                      <FaCalendarAlt className="me-1" /> Dashboard
+                    </Nav.Link>
+                  </>
+                )}
+
+
+                {user.role === USER_ROLES.ADMIN && (
+                  <>
+                    <Nav.Link as={Link} to="/admin/dashboard" className="text-white">
+                      <FaCalendarAlt className="me-1" /> Dashboard
+                    </Nav.Link>
+                  </>
+                )}
                 
                 <Dropdown align="end" className="ms-3">
                   <Dropdown.Toggle variant="light" id="user-dropdown">
                     <FaUser className="me-2" />
                     {user.full_name}
                   </Dropdown.Toggle>
+
 
                   <Dropdown.Menu>
                     <Dropdown.ItemText>
@@ -94,5 +122,6 @@ const Navbar = () => {
     </BSNavbar>
   );
 };
+
 
 export default Navbar;

@@ -109,13 +109,17 @@ export default function Register() {
       // Save to context and localStorage
       login(user, access_token);
 
-      // Redirect based on role
+      // Redirect based on role (now supports all roles)
       if (user.role === USER_ROLES.PATIENT) {
         navigate('/patient/profile');
       } else if (user.role === USER_ROLES.DOCTOR) {
         navigate('/doctor/dashboard');
+      } else if (user.role === USER_ROLES.LAB_ASSISTANT) {
+        navigate('/lab/dashboard');
       } else if (user.role === USER_ROLES.ADMIN) {
         navigate('/admin/dashboard');
+      } else {
+        navigate('/');
       }
 
     } catch (err) {
@@ -185,6 +189,7 @@ export default function Register() {
             >
               <option value="patient">Patient</option>
               <option value="doctor">Doctor</option>
+              <option value="lab_assistant">Lab Assistant</option>
               <option value="admin">Admin</option>
             </select>
           </div>

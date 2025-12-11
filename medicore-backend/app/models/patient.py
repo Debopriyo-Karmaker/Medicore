@@ -1,5 +1,5 @@
 from beanie import Document, Indexed
-from pydantic import Field
+from pydantic import Field, BaseModel
 from typing import Optional, List
 from datetime import datetime
 from enum import Enum
@@ -22,6 +22,16 @@ class Gender(str, Enum):
     OTHER = "other"
 
 
+class DiagnosticReport(BaseModel):
+    """Embedded document for diagnostic reports"""
+    report_id: str
+    report_type: str
+    uploaded_by: str  # Lab assistant name
+    uploaded_at: datetime
+    file_url: str  # Base64 encoded file data
+    notes: Optional[str] = None
+
+
 class Patient(Document):
     patient_id: Indexed(str, unique=True)
     user_id: str  # Reference to User
@@ -40,6 +50,9 @@ class Patient(Document):
     past_operations: List[dict] = Field(default_factory=list)
     current_medications: List[str] = Field(default_factory=list)
     
+    # Diagnostic Reports - NEW FIELD
+    diagnostic_reports: List[DiagnosticReport] = Field(default_factory=list)
+    
     # Timestamps
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
@@ -47,5 +60,3 @@ class Patient(Document):
     class Settings:
         name = "patients"
         indexes = ["patient_id", "user_id"]
-
-
