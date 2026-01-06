@@ -1,0 +1,253 @@
+/* ==================== WRAPPER ==================== */
+.app-navbar-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1040;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ==================== NAVBAR BASE ==================== */
+.app-navbar {
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+/* Light theme */
+.app-navbar-light {
+  background-color: var(--bg-elevated) !important;
+  color: var(--text-main) !important;
+}
+
+/* Dark theme */
+.app-navbar-dark {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  color: var(--text-inverted) !important;
+  border-bottom-color: var(--border-soft) !important;
+}
+
+/* Ensure Bootstrap internal navbar text uses our colors */
+.app-navbar .navbar-nav .nav-link,
+.app-navbar .navbar-brand,
+.app-navbar .dropdown-toggle {
+  color: inherit;
+}
+
+/* ==================== BRAND & LOGO ==================== */
+.app-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+/* Orbit wrapper for subtle glow */
+.app-navbar-logo-orbit {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle at 30% 0%,
+    rgba(124, 58, 237, 0.45),
+    rgba(59, 130, 246, 0.0)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* circular floating logo */
+.app-navbar-logo-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 0%, #a855f7, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1rem;
+  box-shadow: 0 12px 35px rgba(79, 70, 229, 0.6);
+  position: relative;
+  overflow: hidden;
+  animation: logoFloat 3.2s ease-in-out infinite;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* extra highlight inside the circle */
+.app-navbar-logo-circle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 30% 0%,
+    rgba(255, 255, 255, 0.55),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* Split M and + so they look more designed */
+.app-navbar-logo-text,
+.app-navbar-logo-plus {
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.06em;
+}
+
+/* Strong M */
+.app-navbar-logo-text {
+  font-size: 1.1rem;
+}
+
+/* Smaller, slightly raised + */
+.app-navbar-logo-plus {
+  font-size: 0.75rem;
+  margin-left: 1px;
+  transform: translateY(-2px);
+}
+
+/* brand text */
+.app-navbar-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.app-navbar-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--primary);
+}
+
+.app-navbar-dark .app-navbar-title {
+  color: var(--primary-alt);
+}
+
+.app-navbar-tagline {
+  font-size: 0.7rem;
+  margin-top: 1px;
+  color: var(--text-muted);
+}
+
+/* ==================== LINKS ==================== */
+.app-navbar-links .app-navbar-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: inherit !important;
+  border-radius: 999px;
+  padding-inline: 10px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.app-navbar-links .app-navbar-link:hover {
+  background: var(--primary-soft);
+  color: var(--primary) !important;
+}
+
+/* ==================== THEME TOGGLE ==================== */
+.app-theme-toggle {
+  border-radius: 999px !important;
+  width: 36px;
+  height: 36px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-color: var(--border-soft) !important;
+  color: inherit !important;
+  background-color: var(--bg-elevated) !important;
+}
+
+.app-navbar-dark .app-theme-toggle {
+  background-color: transparent !important;
+}
+
+/* ==================== USER DROPDOWN ==================== */
+.app-navbar-user-toggle {
+  border-radius: 999px !important;
+  border: 1px solid var(--border-soft) !important;
+  background-color: var(--bg-elevated) !important;
+  color: inherit !important;
+  font-weight: 500;
+}
+
+.app-navbar-dark .app-navbar-user-toggle {
+  background-color: rgba(15, 23, 42, 0.96) !important;
+}
+
+.app-navbar-user-toggle:focus,
+.app-navbar-user-toggle:hover {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 1px var(--primary-soft);
+}
+
+.app-navbar-role-badge {
+  font-size: 0.6rem;
+}
+
+/* Dropdown menu */
+.app-navbar-user-menu {
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+  border: 1px solid var(--border-subtle);
+}
+
+.app-navbar-user-menu-dark {
+  background-color: #020617;
+  color: var(--text-inverted);
+}
+
+.app-navbar-user-menu .dropdown-item {
+  color: inherit;
+}
+
+.app-navbar-user-menu .dropdown-item:hover {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+}
+
+/* ==================== REGISTER BUTTON ==================== */
+.app-navbar-register-btn {
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-alt));
+  border: none;
+  color: var(--text-inverted);
+  font-weight: 600;
+}
+
+.app-navbar-register-btn:hover {
+  filter: brightness(1.05);
+}
+
+/* ==================== ANIMATION ==================== */
+@keyframes logoFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 12px 35px rgba(79, 70, 229, 0.6);
+  }
+  50% {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 45px rgba(79, 70, 229, 0.75);
+  }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .app-navbar-brand-text {
+    display: none; /* keep just floating logo on small screens */
+  }
+}

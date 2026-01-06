@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
 
 export default function ProtectedRoute({ children, requiredRole }) {
-  const { isAuthenticated, user, loading } = useAuth();
+  const { isAuthenticated, user, role, loading } = useAuth();
 
   if (loading) {
     return <LoadingSpinner />;
@@ -13,7 +13,12 @@ export default function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole) {
+  // Normalize requiredRole to lowercase so "ADMIN" / "admin" both work
+  const normalizedRequired = requiredRole
+    ? requiredRole.toLowerCase()
+    : null;
+
+  if (normalizedRequired && role !== normalizedRequired) {
     return <Navigate to="/login" replace />;
   }
 

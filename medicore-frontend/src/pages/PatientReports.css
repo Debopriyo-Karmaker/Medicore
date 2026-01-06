@@ -1,55 +1,167 @@
-/* Modern Patient Reports Dashboard */
-.reports-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 40px 30px;
-  background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
-  min-height: 100vh;
+/* ================== PATIENT REPORTS PAGE ================== */
+
+/* Page container */
+.patient-reports-page {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 24px 40px;
+  color: var(--text-main);
 }
 
-.reports-container h1 {
-  font-size: 36px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 40px;
+/* Loading state */
+.patient-reports-loading {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 32px;
+  text-align: center;
+  border-radius: 16px;
+  background: radial-gradient(circle at top left, rgba(120, 119, 198, 0.15), transparent),
+    radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.12), transparent);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
+
+.patient-reports-loading p {
+  margin-top: 16px;
+  color: var(--text-muted);
+}
+
+.reports-spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 3px solid rgba(148, 163, 184, 0.35);
+  border-top-color: var(--primary);
+  animation: reports-spin 0.8s linear infinite;
+}
+
+@keyframes reports-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================== GLASS CARD (THEME AWARE) ================== */
+
+/* DARK: keep your original dark glass */
+html.theme-dark .patient-reports-page .glass-card {
+  background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.96),
+      rgba(15, 23, 42, 0.9)
+  );
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.75),
+    0 0 0 1px rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(16px);
+}
+
+/* LIGHT: white with subtle purple tint */
+html.theme-light .patient-reports-page .glass-card {
+  background: linear-gradient(135deg, #ffffff, #eef2ff);
+  border-radius: 16px;
+  border: 1px solid #c7d2fe;
+  box-shadow:
+    0 24px 60px rgba(148, 163, 184, 0.35),
+    0 0 0 1px rgba(226, 232, 240, 0.7);
+}
+
+/* ================== HERO ================== */
+
+.reports-hero {
   display: flex;
   align-items: center;
-  gap: 15px;
+  justify-content: space-between;
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  gap: 18px;
 }
 
-/* Empty State */
-.no-reports {
-  text-align: center;
-  padding: 80px 20px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-  margin-top: 40px;
-  border: 2px dashed #e0e0e0;
+.reports-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.no-reports p {
-  font-size: 20px;
-  color: #666;
+.reports-icon-pill {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 0, #1f2937, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  font-size: 22px;
+}
+
+.reports-hero h1 {
   margin: 0;
+  font-size: 24px;
 }
 
-/* Reports Grid */
+.reports-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.reports-hero-meta {
+  display: flex;
+  align-items: center;
+}
+
+.reports-meta-pill {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(56, 189, 248, 0.6);
+}
+
+.reports-meta-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.reports-meta-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Empty state */
+.reports-empty {
+  padding: 32px 22px;
+  text-align: center;
+}
+
+.reports-empty h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.reports-empty p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Grid */
 .reports-grid {
+  margin-top: 16px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-  margin-top: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
 }
 
-/* Report Card - Premium Design */
+/* ================== REPORT CARDS ================== */
+
 .report-card {
-  background: white;
-  padding: 28px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #f0f0f0;
+  padding: 18px 18px 16px;
   position: relative;
   overflow: hidden;
 }
@@ -57,127 +169,139 @@
 .report-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(129, 140, 248, 0.16), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  pointer-events: none;
 }
 
-.report-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.2);
-  border-color: #667eea;
+.report-card:hover::before {
+  opacity: 1;
 }
 
-.report-card h3 {
-  font-size: 20px;
-  color: #1a1a1a;
-  margin: 0 0 20px 0;
-  font-weight: 700;
-  text-transform: capitalize;
+.report-card-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-}
-
-.report-card h3::before {
-  content: '📋';
-  font-size: 24px;
-}
-
-.report-card p {
-  margin: 12px 0;
-  color: #666;
-  font-size: 15px;
-  line-height: 1.6;
-  display: flex;
-  align-items: flex-start;
   gap: 8px;
+  margin-bottom: 10px;
 }
 
-.report-card strong {
-  color: #333;
-  font-weight: 600;
-  min-width: 120px;
-  display: inline-block;
+.report-type-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: rgba(129, 140, 248, 0.16);
+  border: 1px solid rgba(129, 140, 248, 0.6);
+  color: #c7d2fe;
 }
 
-/* View Button - Premium Style */
-.view-btn {
-  width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+.report-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.report-card-body {
+  margin-bottom: 12px;
+}
+
+.report-field,
+.report-notes {
+  margin: 6px 0;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.report-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--text-muted);
+}
+
+.report-value {
+  font-size: 13px;
+  color: var(--text-main);
+}
+
+.report-notes .report-value {
+  color: rgba(226, 232, 240, 0.95);
+}
+
+/* Card footer */
+.report-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+/* Reuse primary button style from profile */
+.patient-reports-page .btn-primary {
+  background: var(--primary);
+  color: var(--text-inverted);
   border: none;
-  padding: 14px 20px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
   cursor: pointer;
-  margin-top: 20px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition:
+    transform 0.09s ease-out,
+    box-shadow 0.09s ease-out,
+    background 0.09s ease-out;
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.45);
 }
 
-.view-btn::before {
-  content: '👁️';
-  margin-right: 8px;
-}
-
-.view-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-}
-
-.view-btn:active {
+.patient-reports-page .btn-primary:hover {
+  background: var(--primary-alt);
   transform: translateY(-1px);
+  box-shadow: 0 16px 36px rgba(37, 99, 235, 0.6);
 }
 
-/* Modal Overlay - Premium */
-.modal-overlay {
+.patient-reports-page .btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
+}
+
+/* ================== MODAL ================== */
+
+.report-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
+  inset: 0;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: 40;
   padding: 20px;
-  animation: fadeIn 0.3s ease;
+  animation: reports-fade-in 0.25s ease-out;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+@keyframes reports-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-/* Modal Content - Premium */
-.modal-content {
-  background: white;
-  border-radius: 20px;
-  max-width: 1000px;
+.report-modal {
+  max-width: 960px;
   width: 100%;
   max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  padding: 40px;
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
-  animation: slideUp 0.4s ease;
+  padding: 20px 20px 18px;
+  overflow: hidden;
+  animation: reports-slide-up 0.3s ease-out;
 }
 
-@keyframes slideUp {
+@keyframes reports-slide-up {
   from {
-    transform: translateY(50px);
+    transform: translateY(40px);
     opacity: 0;
   }
   to {
@@ -186,181 +310,164 @@
   }
 }
 
-/* Close Button - Premium */
-.close-modal {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-  color: white;
-  border: none;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  font-size: 28px;
+.report-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.report-modal-header h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.report-modal-meta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  color: rgba(226, 232, 240, 0.9);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
   cursor: pointer;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-  z-index: 10;
+  transition:
+    background 0.15s ease-out,
+    transform 0.12s ease-out,
+    border-color 0.12s ease-out;
 }
 
-.close-modal:hover {
-  transform: rotate(90deg) scale(1.1);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+.modal-close-btn:hover {
+  background: rgba(30, 64, 175, 0.9);
+  border-color: rgba(191, 219, 254, 0.9);
+  transform: rotate(90deg);
 }
 
-/* Modal Header */
-.modal-content h2 {
-  margin: 0 60px 30px 0;
-  color: #1a1a1a;
-  font-size: 28px;
-  font-weight: 700;
-  text-transform: capitalize;
-  border-bottom: 3px solid #667eea;
-  padding-bottom: 15px;
+/* Modal body */
+.report-modal-body {
+  margin-top: 10px;
+  padding: 10px 2px 4px;
+  max-height: 70vh;
+  overflow: auto;
 }
 
-/* Document Display */
-.modal-content img {
+.report-preview-image {
   max-width: 100%;
   border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(30, 64, 175, 0.7);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
 }
 
-.modal-content iframe {
+.report-preview-frame {
+  width: 100%;
+  height: 64vh;
+  border: none;
   border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(30, 64, 175, 0.7);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
 }
 
-/* Loading State - Premium */
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 500px;
-  gap: 24px;
-}
-
-.loading::before {
-  content: '';
-  width: 60px;
-  height: 60px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loading p {
-  font-size: 18px;
-  color: #666;
-  font-weight: 500;
-}
-
-/* Custom Scrollbar */
-.modal-content::-webkit-scrollbar {
+/* Scrollbar inside modal */
+.report-modal-body::-webkit-scrollbar {
   width: 8px;
 }
 
-.modal-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+.report-modal-body::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 8px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 10px;
+.report-modal-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--primary), var(--primary-alt));
+  border-radius: 8px;
 }
 
-.modal-content::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
+/* ================== RESPONSIVE ================== */
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .reports-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+@media (max-width: 960px) {
+  .reports-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reports-hero-meta {
+    align-self: stretch;
+    justify-content: flex-start;
   }
 }
 
 @media (max-width: 768px) {
-  .reports-container {
-    padding: 30px 20px;
-  }
-
-  .reports-container h1 {
-    font-size: 28px;
+  .patient-reports-page {
+    padding: 0 16px 28px;
   }
 
   .reports-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .modal-content {
-    padding: 30px 20px;
-    max-height: 95vh;
-    border-radius: 16px;
+  .report-modal {
+    padding: 16px 14px;
+    max-height: 94vh;
   }
 
-  .modal-content h2 {
-    font-size: 22px;
-    margin-right: 50px;
-  }
-
-  .close-modal {
-    width: 42px;
-    height: 42px;
-    font-size: 24px;
-    top: 15px;
-    right: 15px;
-  }
-
-  .report-card {
-    padding: 24px;
+  .report-preview-frame {
+    height: 58vh;
   }
 }
 
-@media (max-width: 480px) {
-  .reports-container h1 {
-    font-size: 24px;
-  }
+/* ================== PRINT ================== */
 
-  .report-card h3 {
-    font-size: 18px;
-  }
-
-  .view-btn {
-    font-size: 15px;
-    padding: 12px 16px;
-  }
-}
-
-/* Print Styles */
 @media print {
-  .modal-overlay {
-    background: white;
+  .report-modal-overlay {
+    background: #ffffff;
   }
 
-  .close-modal,
-  .view-btn {
+  .modal-close-btn,
+  .patient-reports-page .btn-primary {
     display: none;
   }
 
-  .modal-content {
+  .report-modal {
     box-shadow: none;
     max-width: 100%;
   }
+}
+
+/* ================== TEXT CONTRAST ================== */
+
+/* LIGHT MODE: dark text on light cards */
+html.theme-light .patient-reports-page .glass-card,
+html.theme-light .patient-reports-page .glass-card * {
+  color: #111827;
+  font-weight: 500;
+}
+
+html.theme-light .patient-reports-page .reports-subtitle,
+html.theme-light .patient-reports-page .report-label,
+html.theme-light .patient-reports-page .report-date,
+html.theme-light .patient-reports-page .reports-meta-label {
+  color: #4b5563;
+}
+
+/* DARK MODE: keep light text */
+html.theme-dark .patient-reports-page .glass-card,
+html.theme-dark .patient-reports-page .glass-card * {
+  color: #e5e7eb;
+}
+
+html.theme-dark .patient-reports-page .reports-subtitle,
+html.theme-dark .patient-reports-page .report-label,
+html.theme-dark .patient-reports-page .report-date,
+html.theme-dark .patient-reports-page .reports-meta-label {
+  color: #9ca3af;
 }

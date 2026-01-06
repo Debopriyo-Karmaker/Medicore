@@ -1,23 +1,28 @@
-/* Modern Admin Dashboard Styles */
+/* ===========================
+   Modern Admin Dashboard Styles
+   =========================== */
+
 .admin-dashboard-modern {
   max-width: 1400px;
   margin: 0 auto;
   padding: 30px;
-  background: #f8f9fa;
+  background: var(--bg-body);
   min-height: 100vh;
+  color: var(--text-main);
 }
 
-/* Header */
+/* ---------- Header ---------- */
+
 .admin-header-modern {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-alt) 100%);
   padding: 30px;
   border-radius: 16px;
-  color: white;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  color: var(--text-inverted);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .admin-welcome h1 {
@@ -33,9 +38,9 @@
 }
 
 .refresh-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
   border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  color: var(--text-inverted);
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
@@ -44,11 +49,12 @@
 }
 
 .refresh-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.24);
   transform: translateY(-2px);
 }
 
-/* Statistics Grid */
+/* ---------- Statistics Grid ---------- */
+
 .stats-grid-modern {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -57,20 +63,21 @@
 }
 
 .stat-card-modern {
-  background: white;
+  background: var(--bg-card);
   padding: 24px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-soft);
   transition: all 0.3s;
   border-left: 4px solid;
+  color: var(--text-main);
 }
 
 .stat-card-modern:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
 }
 
 .stat-icon {
@@ -81,40 +88,42 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  background: rgba(102, 126, 234, 0.1);
+  background: var(--primary-soft);
+  color: var(--primary);
 }
 
 .stat-content h3 {
   font-size: 32px;
   margin: 0 0 4px 0;
   font-weight: 700;
-  color: #333;
+  color: var(--text-main);
 }
 
 .stat-content p {
   margin: 0;
-  color: #666;
+  color: var(--text-muted);
   font-size: 14px;
   font-weight: 500;
 }
 
-.stat-primary { border-color: #667eea; }
-.stat-success { border-color: #27ae60; }
-.stat-info { border-color: #3498db; }
-.stat-warning { border-color: #f39c12; }
-.stat-pending { border-color: #e67e22; }
-.stat-confirmed { border-color: #2ecc71; }
+.stat-primary   { border-color: var(--primary); }
+.stat-success   { border-color: #22c55e; }
+.stat-info      { border-color: #3b82f6; }
+.stat-warning   { border-color: #f59e0b; }
+.stat-pending   { border-color: #f97316; }
+.stat-confirmed { border-color: #22c55e; }
 
-/* Tabs */
+/* ---------- Tabs ---------- */
+
 .tabs-modern {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
   flex-wrap: wrap;
-  background: white;
+  background: var(--bg-elevated);
   padding: 10px;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-soft);
 }
 
 .tab-modern {
@@ -126,21 +135,22 @@
   cursor: pointer;
   border-radius: 8px;
   transition: all 0.3s;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .tab-modern:hover {
-  background: #f0f0f0;
-  color: #333;
+  background: var(--bg-soft);
+  color: var(--text-main);
 }
 
 .tab-modern.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-alt) 100%);
+  color: var(--text-inverted);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
 }
 
-/* Search Bar */
+/* ---------- Search Bar ---------- */
+
 .search-bar-modern {
   position: relative;
   margin-bottom: 20px;
@@ -149,17 +159,22 @@
 .search-bar-modern input {
   width: 100%;
   padding: 14px 50px 14px 20px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-subtle);
   border-radius: 12px;
   font-size: 15px;
   transition: all 0.3s;
-  background: white;
+  background: var(--bg-card);
+  color: var(--text-main);
+}
+
+.search-bar-modern input::placeholder {
+  color: var(--text-muted);
 }
 
 .search-bar-modern input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-soft);
 }
 
 .search-icon {
@@ -169,24 +184,27 @@
   transform: translateY(-50%);
   font-size: 20px;
   pointer-events: none;
+  color: var(--text-muted);
 }
 
-/* Table */
+/* ---------- Table ---------- */
+
 .table-container-modern {
-  background: white;
+  background: var(--bg-elevated);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-soft);
 }
 
 .table-modern {
   width: 100%;
   border-collapse: collapse;
+  color: var(--text-main);
 }
 
 .table-modern thead {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-alt) 100%);
+  color: var(--text-inverted);
 }
 
 .table-modern th {
@@ -200,7 +218,7 @@
 
 .table-modern td {
   padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .table-modern tbody tr {
@@ -208,7 +226,16 @@
 }
 
 .table-modern tbody tr:hover {
-  background: #f8f9fa;
+  background: var(--bg-soft);
+}
+
+/* darker rows in dark mode so pills pop */
+.app-root.theme-dark .table-modern tbody tr {
+  background-color: #020617;
+}
+
+.app-root.theme-dark .table-modern tbody tr:hover {
+  background-color: #03091a;
 }
 
 .user-cell {
@@ -221,8 +248,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-alt) 100%);
+  color: var(--text-inverted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,69 +261,113 @@
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-/* Badges */
-.badge-modern {
-  padding: 6px 12px;
-  border-radius: 20px;
+/* ---------- Pill helpers ---------- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+/* ---------- Badges ---------- */
+
+.badge-modern {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  white-space: nowrap;
 }
 
 .badge-patient {
   background: #e3f2fd;
-  color: #1976d2;
+  color: #0b4f9c;
 }
 
 .badge-doctor {
   background: #f3e5f5;
-  color: #7b1fa2;
+  color: #6a1b9a;
 }
 
 .badge-admin {
   background: #fce4ec;
-  color: #c2185b;
+  color: #880e4f;
 }
 
 .badge-lab_assistant {
   background: #e8f5e9;
-  color: #388e3c;
+  color: #1b5e20;
+}
+
+/* stronger on dark rows */
+.app-root.theme-dark .badge-patient,
+.app-root.theme-dark .badge-doctor,
+.app-root.theme-dark .badge-admin,
+.app-root.theme-dark .badge-lab_assistant {
+  filter: brightness(1.08);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.55);
 }
 
 .blood-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
   background: #ffebee;
   color: #c62828;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 13px;
 }
 
 .specialization-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
   background: #e1f5fe;
   color: #0277bd;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 13px;
-  font-weight: 600;
 }
 
+/* ---------- Status pills (appointments) ---------- */
+
 .status-badge-modern {
-  padding: 6px 12px;
-  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: lowercase;
 }
 
 .status-pending {
-  background: #fff3cd;
-  color: #856404;
+  background: var(--warning-bg);
+  color: var(--warning-text);
 }
 
 .status-confirmed {
-  background: #d4edda;
-  color: #155724;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 
 .status-rejected {
@@ -311,7 +382,8 @@
   text-overflow: ellipsis;
 }
 
-/* Loading */
+/* ---------- Loading ---------- */
+
 .admin-loading {
   display: flex;
   flex-direction: column;
@@ -319,22 +391,26 @@
   justify-content: center;
   min-height: 100vh;
   gap: 20px;
+  color: var(--text-main);
 }
 
 .spinner-large {
   width: 60px;
   height: 60px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
+  border: 4px solid rgba(249, 250, 251, 0.5);
+  border-top: 4px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Alert */
+/* ---------- Alerts ---------- */
+
 .alert-modern {
   padding: 16px 20px;
   border-radius: 12px;
@@ -343,12 +419,13 @@
 }
 
 .alert-error-modern {
-  background: #fee;
-  border-left: 4px solid #e74c3c;
-  color: #c0392b;
+  background: var(--danger-bg);
+  border-left: 4px solid var(--danger-text);
+  color: var(--danger-text);
 }
 
-/* Responsive */
+/* ---------- Responsive ---------- */
+
 @media (max-width: 768px) {
   .admin-header-modern {
     flex-direction: column;
@@ -366,4 +443,498 @@
   .table-container-modern {
     overflow-x: auto;
   }
+}
+
+/* ===========================
+   Role editor styles (Users tab)
+   =========================== */
+
+.role-editor {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.role-select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Base pill dropdown */
+.role-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 6px 30px 6px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  cursor: pointer;
+  outline: none;
+  min-width: 135px;
+  line-height: 1.2;
+  background-origin: border-box;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.22);
+  transition: transform 0.08s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+/* Text color on pastel background */
+.app-root.theme-light .role-select,
+.app-root.theme-dark .role-select {
+  color: #111827;
+}
+
+/* Role gradients */
+.role-select-patient {
+  background-image: linear-gradient(135deg, #e3f2fd, #bbdefb);
+}
+
+.role-select-doctor {
+  background-image: linear-gradient(135deg, #f3e5f5, #e1bee7);
+}
+
+.role-select-lab_assistant {
+  background-image: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+}
+
+.role-select-admin {
+  background-image: linear-gradient(135deg, #fce4ec, #f8bbd0);
+}
+
+/* Extra boost for dark mode */
+.app-root.theme-dark .role-select-patient,
+.app-root.theme-dark .role-select-doctor,
+.app-root.theme-dark .role-select-lab_assistant,
+.app-root.theme-dark .role-select-admin {
+  font-weight: 700;
+  text-shadow: 0 0 4px rgba(15, 23, 42, 0.35);
+}
+
+/* Hover / focus */
+.role-select:hover {
+  filter: brightness(1.03);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.28);
+  transform: translateY(-1px);
+}
+
+.role-select:focus {
+  box-shadow:
+    0 0 0 2px rgba(102, 126, 234, 0.4),
+    0 6px 14px rgba(15, 23, 42, 0.3);
+}
+
+/* Disabled */
+.role-select:disabled {
+  opacity: 0.7;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* Custom ▾ arrow */
+.role-select-wrapper::after {
+  content: "▾";
+  pointer-events: none;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-52%);
+  font-size: 11px;
+  color: rgba(31, 41, 55, 0.9);
+}
+
+/* Keep badge + select on one line */
+.table-modern td .role-editor .badge-modern {
+  white-space: nowrap;
+}
+
+/* ---------- Danger / delete button ---------- */
+
+.btn-danger {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #f97373, #e11d48);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.08s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.btn-danger::before {
+  content: "🗑";
+  font-size: 13px;
+}
+
+.btn-danger:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 6px 14px rgba(225, 29, 72, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.3);
+}
+
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---------- NEW: View button ---------- */
+
+.btn-view {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #a5b4fc, #6366f1);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.08s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.btn-view::before {
+  content: "👁";
+  font-size: 13px;
+}
+
+.btn-view:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 6px 14px rgba(79, 70, 229, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-view:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+}
+
+.btn-view:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+/* FINAL VISIBILITY FIXES FOR ALL TABLE PILLS */
+
+.badge-modern,
+.badge-patient,
+.badge-doctor,
+.badge-admin,
+.badge-lab_assistant,
+.blood-badge,
+.specialization-badge,
+.status-badge-modern,
+.role-select {
+  color: #111827 !important;
+}
+
+.badge-modern,
+.status-badge-modern {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.badge-patient       { background: #dbeafe !important; }
+.badge-doctor        { background: #ede9fe !important; }
+.badge-admin         { background: #ffe4ef !important; }
+.badge-lab_assistant { background: #dcfce7 !important; }
+.blood-badge         { background: #fee2e2 !important; }
+.specialization-badge { background: #e0f2fe !important; }
+
+.status-pending,
+.status-confirmed,
+.status-rejected {
+  border: 1px solid rgba(15, 23, 42, 0.2);
+}
+
+.app-root.theme-dark .badge-modern,
+.app-root.theme-dark .blood-badge,
+.app-root.theme-dark .specialization-badge,
+.app-root.theme-dark .status-badge-modern,
+.app-root.theme-dark .role-select {
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.55);
+}
+
+/* ===========================
+   NEW: Modal & Edit styling
+   =========================== */
+
+/* full-screen dark overlay, center modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* main modal card */
+.modal-modern {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* wider modal for admin profile */
+.admin-profile-modal {
+  max-width: 800px;
+}
+
+/* header */
+.modal-header-modern {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.modal-header-modern h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.modal-close-btn:hover {
+  color: #111827;
+}
+
+/* body */
+.modal-body-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-row {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-row .modal-field {
+  flex: 1;
+}
+
+.modal-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 4px;
+}
+
+.modal-field input,
+.modal-field select,
+.modal-field textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background: #f9fafb;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.modal-field input:focus,
+.modal-field select:focus,
+.modal-field textarea:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.25);
+  background: #ffffff;
+}
+
+.modal-field textarea {
+  resize: vertical;
+}
+
+/* footer */
+.modal-footer-modern {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* primary & secondary buttons used in modal */
+
+.btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(99, 102, 241, 0.45);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary-outline {
+  background: #ffffff;
+  color: #4b5563;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.btn-secondary-outline:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* actions cell in appointments table */
+.table-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Beautiful EDIT button */
+.btn-secondary {
+  background: #eef2ff;
+  color: #4f46e5;
+  border: 1px solid #c7d2fe;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.12s ease, color 0.12s ease, box-shadow 0.12s ease,
+    transform 0.12s ease;
+}
+
+.btn-secondary:hover {
+  background: #e0e7ff;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* optional: prevent body scroll when modal open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* ========== Admin profile modal content helpers ========== */
+
+.profile-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.profile-section:first-of-type {
+  border-top: none;
+}
+
+.profile-section h4 {
+  margin: 4px 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 16px;
+}
+
+.profile-field {
+  font-size: 13px;
+}
+
+.profile-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.profile-field label {
+  display: block;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 2px;
+}
+
+.profile-field span {
+  display: block;
+  color: #111827;
+}
+
+.profile-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #6366f1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }

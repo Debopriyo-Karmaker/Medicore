@@ -6,6 +6,8 @@ from app.models.patient import Patient
 from app.models.appointment import Appointment
 from app.models.prescription import Prescription
 from app.models.doctor_profile import DoctorProfile
+from app.models.lab_assistant import LabAssistant
+
 
 client: AsyncIOMotorClient = None
 db = None
@@ -19,7 +21,7 @@ async def connect_to_mongo():
     # Initialize beanie with all document models
     await init_beanie(
         database=db,
-        document_models=[User, Patient, Appointment, Prescription, DoctorProfile]
+        document_models=[User, Patient, Appointment, Prescription, DoctorProfile, LabAssistant]
     )
     
     print("✅ Connected to MongoDB")

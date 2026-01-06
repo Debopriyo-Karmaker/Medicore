@@ -1,3 +1,5 @@
+// src/App.jsx
+import LabAssistantProfile from './pages/LabAssistantProfile';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -18,6 +20,7 @@ import LabAssistantDashboard from './pages/LabAssistantDashboard';
 
 import { USER_ROLES } from './utils/constants';
 import './App.css';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 
 // Central dashboard redirect based on role
 function DashboardRedirect() {
@@ -28,24 +31,30 @@ function DashboardRedirect() {
     return <Navigate to="/login" replace />;
   }
 
-  // Redirect based on user role
-  switch (user.role) {
-    case USER_ROLES.PATIENT:
+  // Redirect based on user role (USER_ROLES may be upper; normalize)
+  const normalizedRole = user.role?.toString().toLowerCase() || '';
+
+  switch (normalizedRole) {
+    case USER_ROLES.PATIENT.toLowerCase():
       return <Navigate to="/patient/dashboard" replace />;
-    case USER_ROLES.DOCTOR:
+    case USER_ROLES.DOCTOR.toLowerCase():
       return <Navigate to="/doctor/dashboard" replace />;
-    case USER_ROLES.LAB_ASSISTANT:
+    case USER_ROLES.LAB_ASSISTANT.toLowerCase():
       return <Navigate to="/lab/dashboard" replace />;
-    case USER_ROLES.ADMIN:
+    case USER_ROLES.ADMIN.toLowerCase():
       return <Navigate to="/admin/dashboard" replace />;
     default:
       return <Navigate to="/" replace />;
   }
 }
 
-function App() {
+// Wrap routes so we can apply theme class on root
+function AppContent() {
+  const { theme } = useTheme(); // 'light' | 'dark'
+
   return (
-    <AuthProvider>
+    // app-root is still useful for layout; theme class is also applied on <html> by ThemeContext
+    <div className={`app-root theme-${theme}`}>
       <Router>
         <Navbar />
         <Routes>
@@ -58,14 +67,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute
-                allowedRoles={[
-                  USER_ROLES.PATIENT,
-                  USER_ROLES.DOCTOR,
-                  USER_ROLES.LAB_ASSISTANT,
-                  USER_ROLES.ADMIN,
-                ]}
-              >
+              <ProtectedRoute>
                 <DashboardRedirect />
               </ProtectedRoute>
             }
@@ -75,7 +77,7 @@ function App() {
           <Route
             path="/patient/dashboard"
             element={
-              <ProtectedRoute allowedRoles={[USER_ROLES.PATIENT]}>
+              <ProtectedRoute requiredRole={USER_ROLES.PATIENT}>
                 <PatientProfile />
               </ProtectedRoute>
             }
@@ -83,7 +85,7 @@ function App() {
           <Route
             path="/patient/profile"
             element={
-              <ProtectedRoute allowedRoles={[USER_ROLES.PATIENT]}>
+              <ProtectedRoute requiredRole={USER_ROLES.PATIENT}>
                 <PatientProfile />
               </ProtectedRoute>
             }
@@ -91,7 +93,7 @@ function App() {
           <Route
             path="/patient/appointments"
             element={
-              <ProtectedRoute allowedRoles={[USER_ROLES.PATIENT]}>
+              <ProtectedRoute requiredRole={USER_ROLES.PATIENT}>
                 <Appointments />
               </ProtectedRoute>
             }
@@ -99,7 +101,7 @@ function App() {
           <Route
             path="/patient/reports"
             element={
-              <ProtectedRoute allowedRoles={[USER_ROLES.PATIENT]}>
+              <ProtectedRoute requiredRole={USER_ROLES.PATIENT}>
                 <PatientReports />
               </ProtectedRoute>
             }
@@ -107,7 +109,7 @@ function App() {
           <Route
             path="/patient/prescriptions"
             element={
-              <ProtectedRoute allowedRoles={[USER_ROLES.PATIENT]}>
+              <ProtectedRoute requiredRole={USER_ROLES.PATIENT}>
                 <PatientPrescriptions />
               </ProtectedRoute>
             }
@@ -117,7 +119,7 @@ function App() {
           <Route
             path="/doctor/dashboard"
             element={
-              <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]}>
+              <ProtectedRoute requiredRole={USER_ROLES.DOCTOR}>
                 <DoctorDashboard />
               </ProtectedRoute>
             }
@@ -127,8 +129,16 @@ function App() {
           <Route
             path="/lab/dashboard"
             element={
-              <ProtectedRoute allowedRoles={[USER_ROLES.LAB_ASSISTANT]}>
+              <ProtectedRoute requiredRole={USER_ROLES.LAB_ASSISTANT}>
                 <LabAssistantDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/lab/profile"
+            element={
+              <ProtectedRoute requiredRole={USER_ROLES.LAB_ASSISTANT}>
+                <LabAssistantProfile />
               </ProtectedRoute>
             }
           />
@@ -137,7 +147,7 @@ function App() {
           <Route
             path="/admin/dashboard"
             element={
-              <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <ProtectedRoute requiredRole={USER_ROLES.ADMIN}>
                 <AdminDashboard />
               </ProtectedRoute>
             }
@@ -147,7 +157,17 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
-    </AuthProvider>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

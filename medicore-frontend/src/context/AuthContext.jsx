@@ -12,20 +12,27 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const storedUser = StorageManager.getUser();
     const storedToken = StorageManager.getToken();
-    
+
     if (storedUser && storedToken) {
       setUser(storedUser);
       setToken(storedToken);
     }
-    
+
     setLoading(false);
   }, []);
 
   const login = (userData, accessToken) => {
-    StorageManager.setUser(userData);
+    // Normalize role to lowercase for consistent checks in UI
+    const normalizedUser = {
+      ...userData,
+      role: userData.role?.toLowerCase?.() || userData.role,
+    };
+
+    StorageManager.setUser(normalizedUser);
     StorageManager.setToken(accessToken);
-    StorageManager.setRole(userData.role);
-    setUser(userData);
+    StorageManager.setRole(normalizedUser.role);
+
+    setUser(normalizedUser);
     setToken(accessToken);
   };
 
@@ -36,9 +43,22 @@ export function AuthProvider({ children }) {
   };
 
   const isAuthenticated = !!token && !!user;
+  const role = user?.role;
+  const isAdmin = role === 'admin';
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        role,
+        isAdmin,
+        loading,
+        login,
+        logout,
+        isAuthenticated,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

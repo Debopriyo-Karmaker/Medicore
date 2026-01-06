@@ -8,6 +8,8 @@ import './DoctorDashboard.css';
 export default function DoctorDashboard() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('appointments');
+
+  // Appointments & patients
   const [appointments, setAppointments] = useState([]);
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -20,13 +22,38 @@ export default function DoctorDashboard() {
   const [actionType, setActionType] = useState(null);
   const [responseData, setResponseData] = useState({
     doctor_notes: '',
-    rejection_reason: ''
+    rejection_reason: '',
   });
 
   // Doctor Profile & Availability
   const [profile, setProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(false);
   const [availability, setAvailability] = useState([]);
+
+  // Profile form state
+  const [profileForm, setProfileForm] = useState({
+    about: '',
+    consultation_fee: '',
+    experience_years: '',
+    languages: ['English'],
+    qualifications: ['MBBS'],
+    degrees: [
+      {
+        title: '',
+        institution: '',
+        year: '',
+      },
+    ],
+    clinic_info: {
+      clinic_name: '',
+      clinic_address: '',
+      city: '',
+      country: '',
+      contact_number: '',
+    },
+  });
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileNotFound, setProfileNotFound] = useState(false);
 
   // Prescription
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
@@ -37,7 +64,7 @@ export default function DoctorDashboard() {
     blood_group: '',
     condition: '',
     min_age: '',
-    max_age: ''
+    max_age: '',
   });
 
   useEffect(() => {
@@ -62,10 +89,47 @@ export default function DoctorDashboard() {
   const fetchDoctorProfile = async () => {
     try {
       const response = await api.get('/doctor-profile/me');
-      setProfile(response.data);
-      setAvailability(response.data.availability || []);
+      const data = response.data;
+      setProfile(data);
+      setAvailability(data.availability || []);
+
+      setProfileForm({
+        about: data.about || '',
+        consultation_fee: data.consultation_fee ?? '',
+        experience_years: data.experience_years ?? '',
+        languages: data.languages?.length ? data.languages : ['English'],
+        qualifications:
+          data.qualifications?.length ? data.qualifications : ['MBBS'],
+        degrees:
+          data.degrees?.length
+            ? data.degrees.map((d) => ({
+                title: d.title || '',
+                institution: d.institution || '',
+                year: d.year || '',
+              }))
+            : [
+                {
+                  title: '',
+                  institution: '',
+                  year: '',
+                },
+              ],
+        clinic_info: {
+          clinic_name: data.clinic_info?.clinic_name || '',
+          clinic_address: data.clinic_info?.clinic_address || '',
+          city: data.clinic_info?.city || '',
+          country: data.clinic_info?.country || '',
+          contact_number: data.clinic_info?.contact_number || '',
+        },
+      });
+
+      setProfileNotFound(false);
     } catch (err) {
-      if (err.response?.status !== 404) {
+      if (err.response?.status === 404) {
+        // No profile yet – allow creation
+        setProfile(null);
+        setProfileNotFound(true);
+      } else {
         console.error('Failed to load profile:', err);
       }
     }
@@ -102,23 +166,16 @@ export default function DoctorDashboard() {
     }
   };
 
-  // ✅ CORRECT: Use /details endpoint from backend
+  // ✅ Use /details endpoint from backend
   const viewPatientDetails = async (patientId) => {
     try {
       setError('');
       setLoading(true);
 
-      console.log('Fetching patient details for ID:', patientId);
-
-      // Backend endpoint: GET /patients/{patient_id}/details
       const response = await api.get(`/patients/${patientId}/details`);
-      
-      console.log('Patient details response:', response.data);
-      
       setSelectedPatient(response.data);
       setActiveTab('patient-details');
 
-      // Prescriptions are already included in the /details response
       if (response.data.prescriptions) {
         setPrescriptions(response.data.prescriptions);
       } else {
@@ -129,11 +186,13 @@ export default function DoctorDashboard() {
         status: err.response?.status,
         data: err.response?.data,
         message: err.message,
-        url: err.config?.url
+        url: err.config?.url,
       });
-      
+
       setError(
-        `Failed to load patient details: ${err.response?.data?.detail || err.message}`
+        `Failed to load patient details: ${
+          err.response?.data?.detail || err.message
+        }`,
       );
     } finally {
       setLoading(false);
@@ -147,7 +206,7 @@ export default function DoctorDashboard() {
         doctor_notes:
           status === 'confirmed' ? responseData.doctor_notes : undefined,
         rejection_reason:
-          status === 'rejected' ? responseData.rejection_reason : undefined
+          status === 'rejected' ? responseData.rejection_reason : undefined,
       });
 
       setSuccess('Appointment updated successfully!');
@@ -165,15 +224,13 @@ export default function DoctorDashboard() {
     try {
       setProfileLoading(true);
       await api.put('/doctor-profile/availability', {
-        availability: newAvailability
+        availability: newAvailability,
       });
       setAvailability(newAvailability);
       setSuccess('Availability updated successfully!');
       setError('');
     } catch (err) {
-      setError(
-        err.response?.data?.detail || 'Failed to update availability'
-      );
+      setError(err.response?.data?.detail || 'Failed to update availability');
     } finally {
       setProfileLoading(false);
     }
@@ -185,20 +242,16 @@ export default function DoctorDashboard() {
       setSuccess('Prescription created successfully!');
       setShowPrescriptionForm(false);
 
-      // Reload prescriptions if patient is selected
       if (selectedPatient) {
-        // Re-fetch full patient details to get updated prescriptions
         const response = await api.get(
-          `/patients/${selectedPatient.id}/details`
+          `/patients/${selectedPatient.id}/details`,
         );
         if (response.data.prescriptions) {
           setPrescriptions(response.data.prescriptions);
         }
       }
     } catch (err) {
-      setError(
-        err.response?.data?.detail || 'Failed to create prescription'
-      );
+      setError(err.response?.data?.detail || 'Failed to create prescription');
     }
   };
 
@@ -227,18 +280,159 @@ export default function DoctorDashboard() {
       blood_group: '',
       condition: '',
       min_age: '',
-      max_age: ''
+      max_age: '',
     });
     setSearchQuery('');
     setPatients([]);
   };
 
+  // ---------- Profile form handlers ----------
+
+  const updateProfileField = (field, value) => {
+    setProfileForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const updateClinicField = (field, value) => {
+    setProfileForm((prev) => ({
+      ...prev,
+      clinic_info: {
+        ...prev.clinic_info,
+        [field]: value,
+      },
+    }));
+  };
+
+  const updateDegreeField = (index, field, value) => {
+    setProfileForm((prev) => {
+      const newDegrees = [...prev.degrees];
+      newDegrees[index] = {
+        ...newDegrees[index],
+        [field]: value,
+      };
+      return { ...prev, degrees: newDegrees };
+    });
+  };
+
+  const addDegreeRow = () => {
+    setProfileForm((prev) => ({
+      ...prev,
+      degrees: [
+        ...prev.degrees,
+        { title: '', institution: '', year: '' },
+      ],
+    }));
+  };
+
+  const removeDegreeRow = (index) => {
+    setProfileForm((prev) => ({
+      ...prev,
+      degrees: prev.degrees.filter((_, i) => i !== index),
+    }));
+  };
+
+  const updateQualificationChip = (value) => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    setProfileForm((prev) => {
+      if (prev.qualifications.includes(trimmed)) return prev;
+      return {
+        ...prev,
+        qualifications: [...prev.qualifications, trimmed],
+      };
+    });
+  };
+
+  const removeQualification = (q) => {
+    setProfileForm((prev) => ({
+      ...prev,
+      qualifications: prev.qualifications.filter((x) => x !== q),
+    }));
+  };
+
+  const updateLanguageChip = (value) => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    setProfileForm((prev) => {
+      if (prev.languages.includes(trimmed)) return prev;
+      return {
+        ...prev,
+        languages: [...prev.languages, trimmed],
+      };
+    });
+  };
+
+  const removeLanguage = (lang) => {
+    setProfileForm((prev) => ({
+      ...prev,
+      languages: prev.languages.filter((x) => x !== lang),
+    }));
+  };
+
+  const handleProfileSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setProfileSaving(true);
+
+    try {
+      const payload = {
+        about: profileForm.about || null,
+        consultation_fee: Number(profileForm.consultation_fee) || 0,
+        experience_years: Number(profileForm.experience_years) || 0,
+        languages: profileForm.languages,
+        qualifications: profileForm.qualifications,
+        degrees:
+          profileForm.degrees
+            ?.filter(
+              (d) =>
+                d.title?.trim() &&
+                d.institution?.trim(),
+            )
+            .map((d) => ({
+              title: d.title.trim(),
+              institution: d.institution.trim(),
+              year: d.year ? Number(d.year) : null,
+            })) || [],
+        clinic_info: {
+          clinic_name:
+            profileForm.clinic_info.clinic_name?.trim() || null,
+          clinic_address:
+            profileForm.clinic_info.clinic_address?.trim() || null,
+          city: profileForm.clinic_info.city?.trim() || null,
+          country: profileForm.clinic_info.country?.trim() || null,
+          contact_number:
+            profileForm.clinic_info.contact_number?.trim() || null,
+        },
+      };
+
+      if (profile || !profileNotFound) {
+        // Update existing profile
+        await api.put('/doctor-profile/me', payload);
+        setSuccess('Profile updated successfully!');
+      } else {
+        // Create new profile
+        await api.post('/doctor-profile/', payload);
+        setSuccess('Profile created successfully!');
+        setProfileNotFound(false);
+      }
+
+      await fetchDoctorProfile();
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.data?.detail ||
+          'Failed to save doctor profile',
+      );
+    } finally {
+      setProfileSaving(false);
+    }
+  };
+
   if (loading && activeTab === 'appointments') {
-    return (
-      <div className="loading">
-        Loading dashboard...
-      </div>
-    );
+    return <div className="loading">Loading dashboard...</div>;
   }
 
   return (
@@ -261,19 +455,25 @@ export default function DoctorDashboard() {
                 <span className="stat-number">
                   {profile.total_consultations || 0}
                 </span>
-                <span className="stat-label">Total Consultations</span>
+                <span className="stat-label">
+                  Total Consultations
+                </span>
               </div>
               <div className="stat-card">
                 <span className="stat-number">
                   ${profile.consultation_fee || 0}
                 </span>
-                <span className="stat-label">Consultation Fee</span>
+                <span className="stat-label">
+                  Consultation Fee
+                </span>
               </div>
               <div className="stat-card">
                 <span className="stat-number">
                   {profile.experience_years || 0}
                 </span>
-                <span className="stat-label">Years Experience</span>
+                <span className="stat-label">
+                  Years Experience
+                </span>
               </div>
             </div>
           )}
@@ -308,7 +508,9 @@ export default function DoctorDashboard() {
       {/* Tab Navigation */}
       <div className="tabs">
         <button
-          className={`${activeTab === 'appointments' ? 'tab active' : 'tab'}`}
+          className={
+            activeTab === 'appointments' ? 'tab active' : 'tab'
+          }
           onClick={() => {
             setActiveTab('appointments');
             setError('');
@@ -318,7 +520,9 @@ export default function DoctorDashboard() {
           📅 Appointments
         </button>
         <button
-          className={`${activeTab === 'patients' ? 'tab active' : 'tab'}`}
+          className={
+            activeTab === 'patients' ? 'tab active' : 'tab'
+          }
           onClick={() => {
             setActiveTab('patients');
             setError('');
@@ -330,7 +534,9 @@ export default function DoctorDashboard() {
           🔍 Search Patients
         </button>
         <button
-          className={`${activeTab === 'availability' ? 'tab active' : 'tab'}`}
+          className={
+            activeTab === 'availability' ? 'tab active' : 'tab'
+          }
           onClick={() => {
             setActiveTab('availability');
             setError('');
@@ -339,11 +545,25 @@ export default function DoctorDashboard() {
         >
           📆 My Availability
         </button>
+        <button
+          className={
+            activeTab === 'profile' ? 'tab active' : 'tab'
+          }
+          onClick={() => {
+            setActiveTab('profile');
+            setError('');
+            setSuccess('');
+          }}
+        >
+          👨‍⚕️ My Profile
+        </button>
         {selectedPatient && (
           <button
-            className={`${
-              activeTab === 'patient-details' ? 'tab active' : 'tab'
-            }`}
+            className={
+              activeTab === 'patient-details'
+                ? 'tab active'
+                : 'tab'
+            }
             onClick={() => setActiveTab('patient-details')}
           >
             👤 Patient {selectedPatient.name}
@@ -376,7 +596,9 @@ export default function DoctorDashboard() {
                   <div className="apt-content">
                     <p>
                       <strong>Date:</strong>{' '}
-                      {new Date(apt.appointment_date).toLocaleString()}
+                      {new Date(
+                        apt.appointment_date,
+                      ).toLocaleString()}
                     </p>
                     <p>
                       <strong>Reason:</strong> {apt.reason}
@@ -390,7 +612,8 @@ export default function DoctorDashboard() {
 
                     {apt.doctor_notes && (
                       <p>
-                        <strong>Your Notes:</strong> {apt.doctor_notes}
+                        <strong>Your Notes:</strong>{' '}
+                        {apt.doctor_notes}
                       </p>
                     )}
 
@@ -436,14 +659,15 @@ export default function DoctorDashboard() {
         <div className="patients-section">
           <h2>Search Patients</h2>
 
-          {/* Search Bar with Filters */}
           <div className="search-container">
             <div className="search-bar">
               <input
                 type="text"
                 placeholder="Search by patient name or ID..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) =>
+                  setSearchQuery(e.target.value)
+                }
                 onKeyPress={handleSearchKeyPress}
                 className="search-input"
               />
@@ -456,7 +680,6 @@ export default function DoctorDashboard() {
               </button>
             </div>
 
-            {/* Advanced Filters */}
             <div className="filters-section">
               <h3>⚙️ Advanced Filters</h3>
               <div className="filters-grid">
@@ -467,7 +690,7 @@ export default function DoctorDashboard() {
                     onChange={(e) =>
                       setFilters({
                         ...filters,
-                        blood_group: e.target.value
+                        blood_group: e.target.value,
                       })
                     }
                   >
@@ -492,7 +715,7 @@ export default function DoctorDashboard() {
                     onChange={(e) =>
                       setFilters({
                         ...filters,
-                        condition: e.target.value
+                        condition: e.target.value,
                       })
                     }
                   />
@@ -507,7 +730,7 @@ export default function DoctorDashboard() {
                     onChange={(e) =>
                       setFilters({
                         ...filters,
-                        min_age: e.target.value
+                        min_age: e.target.value,
                       })
                     }
                   />
@@ -522,7 +745,7 @@ export default function DoctorDashboard() {
                     onChange={(e) =>
                       setFilters({
                         ...filters,
-                        max_age: e.target.value
+                        max_age: e.target.value,
                       })
                     }
                   />
@@ -583,7 +806,8 @@ export default function DoctorDashboard() {
                       </td>
                       <td>
                         <span className="badge">
-                          {patient.diagnostic_reports?.length || 0}
+                          {patient.diagnostic_reports?.length ||
+                            0}
                         </span>
                       </td>
                       <td>
@@ -610,8 +834,8 @@ export default function DoctorDashboard() {
         <div className="availability-section">
           <h2>My Availability Schedule</h2>
           <p className="section-description">
-            Set your weekly schedule. You can select up to 3 days and
-            choose time slots for each day.
+            Set your weekly schedule. You can select up to 3 days
+            and choose time slots for each day.
           </p>
 
           <AvailabilityScheduler
@@ -654,6 +878,331 @@ export default function DoctorDashboard() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Profile Tab */}
+      {activeTab === 'profile' && (
+        <div className="profile-section">
+          <h2>My Professional Profile</h2>
+          <p className="section-description">
+            Keep your professional information up to date. This
+            helps patients and admins understand your expertise.
+          </p>
+
+          <form
+            className="doctor-profile-form glass-card"
+            onSubmit={handleProfileSubmit}
+          >
+            <div className="form-grid">
+              {/* Left column */}
+              <div className="form-column">
+                <div className="form-group">
+                  <label>Short Bio</label>
+                  <textarea
+                    rows="4"
+                    placeholder="Describe your professional background, areas of interest and patient care philosophy."
+                    value={profileForm.about}
+                    onChange={(e) =>
+                      updateProfileField('about', e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Consultation Fee (USD)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={profileForm.consultation_fee}
+                      onChange={(e) =>
+                        updateProfileField(
+                          'consultation_fee',
+                          e.target.value,
+                        )
+                      }
+                      placeholder="e.g. 50"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Years of Experience</label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="60"
+                      value={profileForm.experience_years}
+                      onChange={(e) =>
+                        updateProfileField(
+                          'experience_years',
+                          e.target.value,
+                        )
+                      }
+                      placeholder="e.g. 10"
+                    />
+                  </div>
+                </div>
+
+                {/* Qualifications */}
+                <div className="form-group">
+                  <label>Qualifications</label>
+                  <p className="helper-text">
+                    Add your key qualifications (e.g. MBBS,
+                    FCPS, MRCP).
+                  </p>
+                  <div className="chip-input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Type a qualification and press Enter"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          updateQualificationChip(
+                            e.target.value,
+                          );
+                          e.target.value = '';
+                        }
+                      }}
+                    />
+                    <div className="chip-container">
+                      {profileForm.qualifications.map((q) => (
+                        <span
+                          key={q}
+                          className="chip"
+                        >
+                          {q}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              removeQualification(q)
+                            }
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Languages */}
+                <div className="form-group">
+                  <label>Languages</label>
+                  <p className="helper-text">
+                    Add languages you can comfortably consult
+                    in.
+                  </p>
+                  <div className="chip-input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Type a language and press Enter"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          updateLanguageChip(e.target.value);
+                          e.target.value = '';
+                        }
+                      }}
+                    />
+                    <div className="chip-container">
+                      {profileForm.languages.map((lang) => (
+                        <span
+                          key={lang}
+                          className="chip"
+                        >
+                          {lang}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              removeLanguage(lang)
+                            }
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right column */}
+              <div className="form-column">
+                {/* Clinic Info */}
+                <div className="form-group">
+                  <label>Clinic / Practice Details</label>
+                  <div className="form-row">
+                    <input
+                      type="text"
+                      placeholder="Clinic or Hospital Name"
+                      value={
+                        profileForm.clinic_info.clinic_name
+                      }
+                      onChange={(e) =>
+                        updateClinicField(
+                          'clinic_name',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="form-row">
+                    <input
+                      type="text"
+                      placeholder="Address"
+                      value={
+                        profileForm.clinic_info
+                          .clinic_address
+                      }
+                      onChange={(e) =>
+                        updateClinicField(
+                          'clinic_address',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="form-row">
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={profileForm.clinic_info.city}
+                      onChange={(e) =>
+                        updateClinicField(
+                          'city',
+                          e.target.value,
+                        )
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Country"
+                      value={profileForm.clinic_info.country}
+                      onChange={(e) =>
+                        updateClinicField(
+                          'country',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="form-row">
+                    <input
+                      type="text"
+                      placeholder="Contact Number"
+                      value={
+                        profileForm.clinic_info
+                          .contact_number
+                      }
+                      onChange={(e) =>
+                        updateClinicField(
+                          'contact_number',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* Degrees (dynamic) */}
+                <div className="form-group">
+                  <label>Degrees & Certifications</label>
+                  <p className="helper-text">
+                    List your major degrees and certifications
+                    with institution and year.
+                  </p>
+                  <div className="degrees-list">
+                    {profileForm.degrees.map(
+                      (degree, index) => (
+                        <div
+                          key={index}
+                          className="degree-row"
+                        >
+                          <input
+                            type="text"
+                            placeholder="Degree title (e.g. MBBS, FCPS Cardiology)"
+                            value={degree.title}
+                            onChange={(e) =>
+                              updateDegreeField(
+                                index,
+                                'title',
+                                e.target.value,
+                              )
+                            }
+                          />
+                          <input
+                            type="text"
+                            placeholder="Institution"
+                            value={degree.institution}
+                            onChange={(e) =>
+                              updateDegreeField(
+                                index,
+                                'institution',
+                                e.target.value,
+                              )
+                            }
+                          />
+                          <input
+                            type="number"
+                            placeholder="Year"
+                            value={degree.year}
+                            onChange={(e) =>
+                              updateDegreeField(
+                                index,
+                                'year',
+                                e.target.value,
+                              )
+                            }
+                          />
+                          {profileForm.degrees.length > 1 && (
+                            <button
+                              type="button"
+                              className="btn-icon"
+                              onClick={() =>
+                                removeDegreeRow(index)
+                              }
+                            >
+                              ×
+                            </button>
+                          )}
+                        </div>
+                      ),
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-outline small"
+                    onClick={addDegreeRow}
+                  >
+                    + Add Another Degree
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-footer">
+              <button
+                type="submit"
+                className="btn-primary large"
+                disabled={profileSaving}
+              >
+                {profileSaving
+                  ? 'Saving...'
+                  : profile || !profileNotFound
+                  ? 'Save Changes'
+                  : 'Create Profile'}
+              </button>
+              {profile && (
+                <span className="last-updated">
+                  Last updated:{' '}
+                  {new Date(
+                    profile.updated_at,
+                  ).toLocaleString()}
+                </span>
+              )}
+            </div>
+          </form>
         </div>
       )}
 
@@ -722,7 +1271,7 @@ export default function DoctorDashboard() {
                 <span className="value">
                   {selectedPatient.date_of_birth
                     ? new Date(
-                        selectedPatient.date_of_birth
+                        selectedPatient.date_of_birth,
                       ).toLocaleDateString()
                     : 'N/A'}
                 </span>
@@ -767,8 +1316,7 @@ export default function DoctorDashboard() {
               <div className="detail-item">
                 <span className="label">Contact Phone</span>
                 <span className="value">
-                  {selectedPatient.emergency_contact ||
-                    'N/A'}
+                  {selectedPatient.emergency_contact || 'N/A'}
                 </span>
               </div>
             </div>
@@ -791,10 +1339,10 @@ export default function DoctorDashboard() {
                   Chronic Conditions
                 </span>
                 <span className="value">
-                  {selectedPatient.chronic_conditions
-                    ?.length > 0
+                  {selectedPatient.chronic_conditions?.length >
+                  0
                     ? selectedPatient.chronic_conditions.join(
-                        ', '
+                        ', ',
                       )
                     : 'None reported'}
                 </span>
@@ -805,10 +1353,10 @@ export default function DoctorDashboard() {
                   Current Medications
                 </span>
                 <span className="value">
-                  {selectedPatient.current_medications
-                    ?.length > 0
+                  {selectedPatient.current_medications?.length >
+                  0
                     ? selectedPatient.current_medications.join(
-                        ', '
+                        ', ',
                       )
                     : 'None reported'}
                 </span>
@@ -836,7 +1384,7 @@ export default function DoctorDashboard() {
                       <h4>{presc.prescription_id}</h4>
                       <span className="presc-date">
                         {new Date(
-                          presc.created_at
+                          presc.created_at,
                         ).toLocaleDateString()}
                       </span>
                     </div>
@@ -862,7 +1410,7 @@ export default function DoctorDashboard() {
                         <p>
                           <strong>Follow-up:</strong>{' '}
                           {new Date(
-                            presc.follow_up_date
+                            presc.follow_up_date,
                           ).toLocaleDateString()}
                         </p>
                       )}
@@ -877,8 +1425,12 @@ export default function DoctorDashboard() {
           {selectedPatient.diagnostic_reports?.length > 0 && (
             <div className="reports-section">
               <h3>
-                📄 Diagnostic Reports{' '}
-                ({selectedPatient.diagnostic_reports?.length})
+                📄 Diagnostic Reports (
+                {
+                  selectedPatient.diagnostic_reports
+                    ?.length
+                }
+                )
               </h3>
               {selectedPatient.diagnostic_reports?.length ===
               0 ? (
@@ -908,7 +1460,7 @@ export default function DoctorDashboard() {
                           <p>
                             <strong>Upload Date:</strong>{' '}
                             {new Date(
-                              report.uploaded_at
+                              report.uploaded_at,
                             ).toLocaleString()}
                           </p>
 
@@ -922,19 +1474,20 @@ export default function DoctorDashboard() {
 
                         <div className="report-actions">
                           <button
-                            className="btn-download"
+                            type= "button"
+                            className="doctor-download-btn"
                             onClick={() =>
                               downloadReport(
                                 report.file_url,
-                                report.report_type
+                                report.report_type,
                               )
                             }
                           >
-                            📥 Download Report
+                            ⬇ Download Report
                           </button>
                         </div>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               )}
@@ -946,8 +1499,8 @@ export default function DoctorDashboard() {
             selectedPatient.appointments.length > 0 && (
               <div className="appointments-history">
                 <h3>
-                  📅 Appointment History{' '}
-                  ({selectedPatient.appointments.length})
+                  📅 Appointment History (
+                  {selectedPatient.appointments.length})
                 </h3>
                 <div className="history-timeline">
                   {selectedPatient.appointments.map((apt) => (
@@ -957,7 +1510,7 @@ export default function DoctorDashboard() {
                     >
                       <div className="history-date">
                         {new Date(
-                          apt.appointment_date
+                          apt.appointment_date,
                         ).toLocaleDateString()}
                       </div>
                       <div className="history-content">
@@ -1004,7 +1557,7 @@ export default function DoctorDashboard() {
                   onChange={(e) =>
                     setResponseData((prev) => ({
                       ...prev,
-                      doctor_notes: e.target.value
+                      doctor_notes: e.target.value,
                     }))
                   }
                   placeholder="Add any notes for the patient..."
@@ -1021,7 +1574,7 @@ export default function DoctorDashboard() {
                   onChange={(e) =>
                     setResponseData((prev) => ({
                       ...prev,
-                      rejection_reason: e.target.value
+                      rejection_reason: e.target.value,
                     }))
                   }
                   placeholder="Why are you rejecting this appointment?"
@@ -1039,7 +1592,7 @@ export default function DoctorDashboard() {
                     selectedAppt,
                     actionType === 'confirm'
                       ? 'confirmed'
-                      : 'rejected'
+                      : 'rejected',
                   )
                 }
                 disabled={
@@ -1058,7 +1611,7 @@ export default function DoctorDashboard() {
                   setActionType(null);
                   setResponseData({
                     doctor_notes: '',
-                    rejection_reason: ''
+                    rejection_reason: '',
                   });
                 }}
               >
@@ -1075,14 +1628,11 @@ export default function DoctorDashboard() {
           <div className="modal-content prescription-modal">
             <div className="modal-header">
               <h3>
-                Write Prescription for{' '}
-                {selectedPatient.name}
+                Write Prescription for {selectedPatient.name}
               </h3>
               <button
                 className="modal-close"
-                onClick={() =>
-                  setShowPrescriptionForm(false)
-                }
+                onClick={() => setShowPrescriptionForm(false)}
               >
                 ×
               </button>

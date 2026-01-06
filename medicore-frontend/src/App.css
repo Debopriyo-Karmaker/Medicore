@@ -1,32 +1,137 @@
-/* ==================== LOGIN PAGE ==================== */
+/* ==================== THEME ROOT ==================== */
+:root {
+  /* Light theme defaults (dashboard-friendly) */
+  --bg-body: #eef1f7;
+  --bg-elevated: #ffffff;
+  --bg-card: #f5f7fb;
+  --bg-soft: #e3e7f0;
+
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --text-inverted: #ffffff;
+
+  --border-subtle: #d4d4dd;
+  --border-soft: #c7c9d6;
+
+  --primary: #4f46e5;
+  --primary-alt: #7c3aed;
+  --primary-soft: rgba(79, 70, 229, 0.12);
+
+  --success-bg: #d1fae5;
+  --success-text: #065f46;
+
+  --warning-bg: #fef3c7;
+  --warning-text: #92400e;
+
+  --danger-bg: #fee2e2;
+  --danger-text: #b91c1c;
+
+  --shadow-soft: 0 4px 16px rgba(15, 23, 42, 0.08);
+  --shadow-strong: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+
+/* Light theme (default) */
+html.theme-light,
+body.theme-light {
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+
+/* Dark theme overrides */
+html.theme-dark,
+body.theme-dark {
+  --bg-body: #050816;
+  --bg-elevated: #0b1020;
+  --bg-card: #111827;
+  --bg-soft: #050816;
+
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-inverted: #ffffff;
+
+  --border-subtle: #1f2933;
+  --border-soft: #374151;
+
+  --primary: #818cf8;
+  --primary-alt: #a855f7;
+  --primary-soft: rgba(129, 140, 248, 0.12);
+
+  --success-bg: #065f46;
+  --success-text: #d1fae5;
+
+  --warning-bg: #92400e;
+  --warning-text: #fef3c7;
+
+  --danger-bg: #7f1d1d;
+  --danger-text: #fecaca;
+
+  --shadow-soft: 0 2px 16px rgba(0, 0, 0, 0.6);
+  --shadow-strong: 0 16px 50px rgba(0, 0, 0, 0.8);
+
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+
+/* App root */
+.app-root {
+  min-height: 100vh;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+
+/* Let components control their own color; avoid forcing all children */
+.app-root p,
+.app-root span,
+.app-root h1,
+.app-root h2,
+.app-root h3,
+.app-root h4,
+.app-root h5,
+.app-root h6,
+.app-root a,
+.app-root small,
+.app-root label {
+  color: inherit;
+}
+
+
+/* ==================== LOGIN PAGE (legacy layout) ==================== */
 .login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-alt) 100%);
 }
 
+
 .login-container {
-  background: white;
+  background: var(--bg-elevated);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-strong);
   padding: 40px;
   width: 100%;
   max-width: 400px;
+  color: var(--text-main);
 }
+
 
 .login-header {
   text-align: center;
   margin-bottom: 30px;
 }
 
+
 .login-header h1 {
   font-size: 32px;
-  color: #333;
   margin: 0;
   font-weight: 700;
 }
+
 
 .login-form {
   display: flex;
@@ -34,61 +139,82 @@
   gap: 20px;
 }
 
-.form-group {
+
+.login-form .form-group {
   display: flex;
   flex-direction: column;
 }
 
-.form-group label {
+
+.login-form .form-group label {
   font-weight: 600;
   margin-bottom: 8px;
-  color: #333;
 }
 
-.form-group input,
-.form-group select {
+
+.login-form .form-group input,
+.login-form .form-group select,
+.login-form .form-group textarea {
   padding: 12px 14px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-subtle);
+  background-color: var(--bg-card);
   border-radius: 6px;
   font-size: 14px;
+  color: var(--text-main);
 }
 
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #667eea;
+
+.login-form .form-group input::placeholder,
+.login-form .form-group textarea::placeholder {
+  color: var(--text-muted);
 }
+
+
+.login-form .form-group input:focus,
+.login-form .form-group select:focus,
+.login-form .form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary-soft);
+}
+
 
 .login-btn {
   padding: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-alt) 100%);
+  color: var(--text-inverted);
   border: none;
   border-radius: 6px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
+
 
 .login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px var(--primary-soft);
 }
+
 
 .login-footer {
   text-align: center;
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-muted);
 }
+
 
 .register-link {
   background: none;
   border: none;
-  color: #667eea;
+  color: var(--primary);
   cursor: pointer;
   font-weight: 600;
 }
+
 
 /* ==================== PATIENT PROFILE ==================== */
 .patient-profile-container {
@@ -97,19 +223,26 @@
   padding: 20px;
 }
 
+
 .profile-header h1 {
   font-size: 32px;
-  color: #333;
   margin: 0 0 10px 0;
 }
 
+
+.profile-header p {
+  color: var(--text-muted);
+}
+
+
 .profile-form,
 .profile-display {
-  background: white;
+  background: var(--bg-elevated);
   padding: 30px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-soft);
 }
+
 
 .form-row {
   display: grid;
@@ -118,15 +251,6 @@
   margin-bottom: 20px;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  font-family: inherit;
-}
 
 .form-actions {
   display: flex;
@@ -134,12 +258,14 @@
   margin-top: 20px;
 }
 
+
 .info-row {
   display: flex;
   justify-content: space-between;
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-soft);
 }
+
 
 /* ==================== APPOINTMENTS ==================== */
 .appointments-container {
@@ -148,6 +274,7 @@
   padding: 20px;
 }
 
+
 .appointments-header {
   display: flex;
   justify-content: space-between;
@@ -155,13 +282,15 @@
   margin-bottom: 30px;
 }
 
+
 .booking-form-container {
-  background: white;
+  background: var(--bg-elevated);
   padding: 30px;
   border-radius: 8px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-soft);
 }
+
 
 .booking-form {
   display: grid;
@@ -169,9 +298,11 @@
   gap: 20px;
 }
 
+
 .booking-form .form-group:last-child {
   grid-column: 1 / -1;
 }
+
 
 .appointments-grid {
   display: grid;
@@ -179,12 +310,14 @@
   gap: 20px;
 }
 
+
 .appointment-card {
-  background: white;
+  background: var(--bg-card);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-soft);
 }
+
 
 .apt-header {
   display: flex;
@@ -193,6 +326,7 @@
   margin-bottom: 15px;
 }
 
+
 .status {
   padding: 5px 10px;
   border-radius: 20px;
@@ -200,31 +334,42 @@
   font-weight: 600;
 }
 
+
 .status.pending {
-  background: #fff3cd;
-  color: #856404;
+  background: var(--warning-bg);
+  color: var(--warning-text);
 }
+
 
 .status.confirmed {
-  background: #d4edda;
-  color: #155724;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 
-/* ==================== DOCTOR DASHBOARD ==================== */
+
+/* ==================== DOCTOR DASHBOARD (legacy bits) ==================== */
 .doctor-dashboard-container {
   max-width: 1200px;
   margin: 30px auto;
   padding: 20px;
 }
 
+
 .dashboard-header h1 {
   font-size: 32px;
   margin: 0 0 10px 0;
 }
 
+
+.dashboard-header p {
+  color: var(--text-muted);
+}
+
+
 .appointments-section h2 {
   margin-bottom: 20px;
 }
+
 
 .apt-actions {
   display: flex;
@@ -232,9 +377,10 @@
   margin-top: 15px;
 }
 
+
 .btn-confirm {
-  background: #28a745;
-  color: white;
+  background: #22c55e;
+  color: var(--text-inverted);
   border: none;
   padding: 8px 15px;
   border-radius: 4px;
@@ -242,15 +388,17 @@
   flex: 1;
 }
 
+
 .btn-reject {
-  background: #dc3545;
-  color: white;
+  background: #ef4444;
+  color: var(--text-inverted);
   border: none;
   padding: 8px 15px;
   border-radius: 4px;
   cursor: pointer;
   flex: 1;
 }
+
 
 .modal-overlay {
   position: fixed;
@@ -258,43 +406,52 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
 }
 
+
 .modal-content {
-  background: white;
+  background: var(--bg-elevated);
   padding: 30px;
   border-radius: 8px;
   max-width: 500px;
+  width: 100%;
+  box-shadow: var(--shadow-strong);
 }
 
-/* ==================== BUTTONS ==================== */
-.btn-primary {
-  background: #667eea;
-  color: white;
+
+/* ==================== GENERIC BUTTON HELPERS (SCOPED) ==================== */
+.app-root .btn-primary {
+  background: var(--primary);
+  color: var(--text-inverted);
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
-.btn-primary:hover {
-  background: #764ba2;
+
+.app-root .btn-primary:hover {
+  background: var(--primary-alt);
+  transform: translateY(-1px);
 }
 
-.btn-secondary {
-  background: #ccc;
-  color: #333;
+
+.app-root .btn-secondary {
+  background: var(--border-soft);
+  color: var(--text-main);
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
 }
+
 
 /* ==================== ALERTS ==================== */
 .alert {
@@ -303,27 +460,33 @@
   margin-bottom: 20px;
 }
 
+
 .alert-error {
-  background: #fee;
-  border-left: 4px solid #e74c3c;
-  color: #c0392b;
+  background: var(--danger-bg);
+  border-left: 4px solid var(--danger-text);
+  color: var(--danger-text);
 }
 
+
 .alert-success {
-  background: #efe;
-  border-left: 4px solid #27ae60;
-  color: #229954;
+  background: var(--success-bg);
+  border-left: 4px solid var(--success-text);
+  color: var(--success-text);
 }
+
 
 .no-appointments,
 .no-profile {
   text-align: center;
   padding: 40px;
-  background: #f9f9f9;
+  background: var(--bg-soft);
   border-radius: 8px;
+  color: var(--text-muted);
 }
+
 
 .loading {
   text-align: center;
   padding: 40px;
+  color: var(--text-muted);
 }
