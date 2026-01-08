@@ -16,7 +16,8 @@ async def register(user_data: UserCreate):
     print(f"🔍 Received registration data: {user_data}")
 
     # Check if user already exists
-    existing_user = await User.find_one(User.email == user_data.email)
+    existing_user = await User.find_one({"email": user_data.email})
+
     if existing_user:
         print(f"❌ Email already registered: {user_data.email}")
         raise HTTPException(
@@ -124,7 +125,8 @@ async def register(user_data: UserCreate):
 async def login(credentials: UserLogin):
     """Login user"""
     # Find user
-    user = await User.find_one(User.email == credentials.email)
+    user = await User.find_one({"email": credentials.email})
+
     if not user or not verify_password(credentials.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

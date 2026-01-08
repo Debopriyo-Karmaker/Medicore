@@ -1,23 +1,22 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.core.database import connect_to_mongo, close_mongo_connection
 from app.api.routes import (
-    auth, 
-    patients, 
-    appointments, 
-    admin, 
+    auth,
+    patients,
+    appointments,
+    admin,
     lab_assistant,
     doctor_profile,
-    prescriptions
+    prescriptions,
 )
-
 
 app = FastAPI(
     title="Medicore API",
     description="Hospital Management System API",
-    version="1.0.0"
+    version="1.0.0",
 )
-
 
 # CORS middleware
 app.add_middleware(
@@ -27,7 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # Startup and Shutdown Events
 @app.on_event("startup")
@@ -50,9 +48,16 @@ app.include_router(patients.router, prefix="/api/patients", tags=["Patients"])
 app.include_router(appointments.router, prefix="/api/appointments", tags=["Appointments"])
 app.include_router(admin.router, prefix="/api", tags=["Admin"])
 app.include_router(lab_assistant.router, prefix="/api/lab", tags=["Lab Assistant"])
-app.include_router(doctor_profile.router, prefix="/api/doctor-profile", tags=["Doctor Profile"])
-app.include_router(prescriptions.router, prefix="/api/prescriptions", tags=["Prescriptions"])
-
+app.include_router(
+    doctor_profile.router,
+    prefix="/api/doctor-profile",
+    tags=["Doctor Profile"],
+)
+app.include_router(
+    prescriptions.router,
+    prefix="/api/prescriptions",
+    tags=["Prescriptions"],
+)
 
 # Health Check Endpoints
 @app.get("/")
@@ -69,8 +74,8 @@ async def root():
             "doctor_profile": "/api/doctor-profile",
             "prescriptions": "/api/prescriptions",
             "lab": "/api/lab",
-            "admin": "/api"
-        }
+            "admin": "/api",
+        },
     }
 
 
@@ -79,5 +84,5 @@ async def health_check():
     return {
         "status": "healthy",
         "api": "running",
-        "database": "connected"
+        "database": "connected",
     }
